@@ -11,3 +11,7 @@ Two supervised learning algorithms, Naïve Bayes and  Support Vector Machines (S
 - SKlearn
 - Orange Tool
 
+## Author
+
+Giannis Thibaios
+
