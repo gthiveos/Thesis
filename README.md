@@ -1,4 +1,4 @@
-# Study and Evaluation Techniques ot Text Mining in Tweets for Politics
+# Study and Evaluation Techniques of Text Mining in Tweets for Politics
 
 ## Abstract
 Social networks generate every minute huge amounts of data, which occurs due to their large adoption and daily use in recent years. The need for wider use in various areas of social business life has been created. For this reason, techniques and algorithms for text processing, such as Text Mining and Sentiment Analysis, have been developed.
