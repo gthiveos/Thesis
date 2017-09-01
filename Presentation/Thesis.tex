@@ -1,0 +1,576 @@
+\documentclass{beamer}
+
+\mode<presentation> {
+
+
+\usetheme{Boadilla}
+
+\useoutertheme{smoothtree}
+}
+
+\usepackage[english,greek]{babel}
+\usepackage[utf8]{inputenc}
+%\usepackage{undertilde}
+%\usepackage{xltxtra} 
+%\usepackage{xgreek} 
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{amssymb}
+
+
+\title[Εξόρυξη πολιτικής γνώμης από {\latintext{tweets}}]{Μελέτη και αξιολόγηση τεχνικών εξόρυξης πολιτικής γνώμης σε {\latintext{tweets}}}
+
+\author{Γιάννης Θηβαίος \\ Α.Μ. 346}
+
+\date{Αύγουστος 2017}
+
+\begin{document}
+
+\begin{frame}
+
+\titlepage % Print the title page as the first slide
+\vfill
+\center{{\footnotesize Πανεπιστήμιο Πατρών - Τμήμα Μαθηματικών}}
+\center{{\footnotesize Τριμελής Εξεταστική Επιτροπή: \emph{Κωτσιαντής Σ., Γράψα Θ., Καββαδίας Δ.}
+}
+}
+\end{frame}
+
+\begin{frame}{Περιεχόμενα}
+\tableofcontents
+\end{frame}
+
+\section{Εισαγωγή στην επεξεργασία κειμένου}
+
+\subsection{Επεξεργασία Κειμένου}
+
+\begin{frame}
+\begin{itemize}
+\item Το 80$\%$ περίπου των δεδομένων που βρίσκονται στο διαδίκτυο αποτελούν αδόμητη πληροφορία σε μορφή κειμένου, συνεπώς δημιουργούνται ανάγκες και προκλήσεις επεξεργασίας αυτής της πληροφορίας.
+\vfill
+\item Επεξεργασία κειμένου: Η εξόρυξη κειμένου είναι η διαδικασία αναζήτησης ή εξαγωγής των χρήσιμων πληροφοριών από τα δεδομένα κειμένου.
+\vfill
+\item Η αναπαράσταση των εγγράφων γίνεται με το Μοντέλο Διανυσματικού Χώρου, με την οποία τα κείμενα αναπαριστώνται σε μορφή διανυσμάτων. \footnote{{\latintext{ Raghavan, V. V. and Wong, S. K. M. (1986)}}}
+\vfill
+\end{itemize}
+\end{frame}
+
+\subsection{Μοντέλο Διανυσματικού Χώρου}
+
+\begin{frame}
+\begin{itemize}
+\item Έχουμε ένα σύνολο από κείμενα και θεωρούμε το καθένα από αυτά ως ένα {\latintext{bag-of-words}}, μια σακούλα που περιλαμβάνει όλες τις λέξεις μες στο κείμενο.
+\item Υπάρχουν δύο βασικά στάδια προκειμένου να μετατραπούν τα δεδομένα στην κατάλληλη μορφή προς επεξεργασία: 
+\vfill
+\begin{itemize}
+\item {\textbf{Στάθμιση όρων {\latintext{(Term Weighting)}}}}: Η στάθμιση όρων είναι μια σημαντική έννοια που καθορίζει την επιτυχία ή την αποτυχία του συστήματος ταξινόμησης. Εκφράζει τη σημασία της λέξης στο έγγραφο. Χρησιμοποιείται η μετρική {\latintext{TF-IDF}}, όπου {\latintext{TF}} η συχνότητα του κάθε όρου μες στο κείμενο και {\latintext{IDF}} είναι μια τιμή που δηλώνει τη σημαντικότητα ενός όρου στο κείμενο, σε σχέση με ολόκληρη τη συλλογή κειμένων.
+\vfill
+\item {\textbf{Μετρικές ομοιότητας}}: Το εσωτερικό γινόμενο του διανύσματος εγγράφων και του διανύσματος ερωτήματος, όπου η αλληλοεπικάλυψη λέξεων υποδεικνύει ομοιότητα.
+\end{itemize}
+\vfill
+\end{itemize}
+\end{frame}
+
+\subsection{Τεχνικές Προεπεξεργασίας Δεδομένων}
+
+\begin{frame}
+\begin{itemize}
+\item Η φάση της προεπεξεργασίας χρειάζεται και μια γλωσσολογική επεξεργασία, έτσι ώστε τα αρχικά δεδομένα σε μια δομή έτοιμη για αξιοποίηση από τους αλγόριθμους μάθησης. \footnote{{\latintext{ Rashmi Agrawal, Mridula Batra, (2013)}}}
+\vfill
+\begin{itemize}
+\item {\textbf{Αφαίρεση των {\latintext{stopwords}}}}: Αφαίρεση λέξεων όπως {\latintext{'the', 'of', 'to', 'and',}} που δε φέρουν χρήσιμη πληροφορία.
+\vfill
+\item {\textbf{Αποκατάληξη {\latintext{(stemming)}}}}: Μετατροπή των λέξεων στη ρίζα από την οποία προέρχονται.
+\vfill
+\item {\textbf{Μορφοσυντακτική ανάλυση{\latintext{(POS Tagging)}}}}: Κάθε λέξη κατηγοριοποιείται στο μέρος του λόγου το οποίο ανήκει (επίθετο, ουσιαστικό, ρήμα κ.α). 
+\vfill
+\item {\textbf{Μείωση Διαστασιμότητας {\latintext{(Dimensionality Reduction)}}}}: Αφαίρεση λέξεων υψηλής συχνότητας που δε σχετίζονται με τη διαδικασία της ταξινόμησης και σπάνιων λέξεων.
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\subsection{Μηχανική Μάθηση}
+
+\begin{frame}
+\item Η μηχανική μάθηση διερευνά τη μελέτη και την κατασκευή αλγορίθμων που μπορούν να μαθαίνουν από τα δεδομένα και να κάνουν προβλέψεις σχετικά με αυτά. \footnote{{\latintext{ Mitchell, T. (1997)}}}
+\vfill
+\begin{flushleft}
+{\color{blue}Είδη Μηχανικής Μάθησης}
+\end{flushleft}
+\vfill
+\begin{itemize}
+\item Επιβλεπόμενη Μάθηση {\latintext{(Supervised Learning)}}
+\item Μη Επιβλεπόμενη Μάθησης {\latintext{(Unsupervised Learning)}}
+\end{itemize}
+\begin{flushleft}
+{\color{blue}Αλγόριθμοι Μηχανικής Μάθησης}
+\end{flushleft}
+\vfill
+\item {\latintext{\textbf{Naive Bayes, SVM}, k-NN classification, Decision Trees, k-Means, Random Forest}} κ.α
+\vfill
+
+
+\end{frame}
+
+
+\section{Εξόρυξη γνώμης και Ανάλυση Συναισθήματος}
+
+\begin{frame}
+\begin{flushleft}
+{\color{blue}Ορισμός}
+\end{flushleft}
+Πρόκειται για την επεξεργασία ενός συνόλου αποτελεσμάτων αναζήτησης για ένα συγκεκριμένο στοιχείο, συγκεντρώνοντας απόψεις για το ίδιο το στοιχείο ή κάποια χαρακτηριστικά του(κακή, ουδέτερη, καλή) \footnote{{\latintext{ S. ChandraKala and C. Sindhu, (2012)}}}
+\begin{flushleft}
+{\color{blue}Επίπεδα Συναισθηματικής Ανάλυσης}
+\end{flushleft}
+\begin{itemize}
+\item Επίπεδο Κειμένου
+\item Επίπεδο Πρότασης
+\item Επίπεδο Χαρακτηριστικών
+\end{itemize}
+\begin{flushleft}
+{\color{blue}Εφαρμογές Ανάλυσης Συναισθήματος}
+\end{flushleft}
+{\latintext{Social Media}}, Οικονομία, Επιχειρηματικότητα, Πολιτική, Ιατρική,κ.α
+
+\end{frame}
+
+\section{{\latintext{Twitter}} και Πολιτική}
+
+\begin{frame}
+\begin{flushleft}
+{\color{blue}Λίγα Λόγια για το {\latintext{Twitter}}}
+\end{flushleft}
+\vfill
+\begin{itemize}
+\item Πρόκειται για το 2ο δημοφιλέστερο μέσο κοινωνικής δικτύωσης. Επιτρέπει στους χρήστες να επικοινωνούν με σύντομα μηνύματα(140 χαρακτήρες) που ονομάζονται {\latintext{tweets}}.
+\item Το {\latintext{Twitter}} είναι χρήσιμο για την ανάγνωση και εύρεση ενδιαφερόντων θεμάτων σε πραγματικό χρόνο που προσελκύουν την προσοχή του χρήστη.
+\item Το {\latintext{Twitter}} επίσης υποστηρίζει αποστολή άμεσων προσωπικών μηνυμάτων μεταξύ των χρηστών, ως εκ τούτου αναπτύσσουν βασικές λειτουργίες ανταλλαγής μηνυμάτων
+\item Όταν ο χρήστης αποφασίσει να ακολουθήσει άλλο λογαριασμό, το {\latintext{Twitter}} θα ενημερώσει το προφίλ του ακόλουθου με τα πιο πρόσφατα {\latintext{tweets}}. Ο χρήστης γίνεται στους όρους του {\latintext{Twitter}} {\latintext{«follower»}}.
+\vfill
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\begin{flushleft}
+{\color{blue}Η χρήση του {\latintext{Twitter}} από πολιτικούς} 
+\end{flushleft}
+\vfill
+\item Υπάρχουν τρία βασικά κίνητρα για τη χρήση του {\latintext{Twitter}} από πολιτικούς: \footnote{{\latintext{ Enli, G. S. & Skogerbo, E. (2013)}}}
+\begin{itemize}
+\item Αύξηση της προβολής του προφίλ τους κι επαφή με ηλικιακές κατηγορίες που είναι δύσκολο να έχουν πρόσβαση(πχ 18-24)
+\item Δημοσιοποίηση δράσεων, προτάσεων και καλέσματα σε κοινωνικοπολιτικές εκδηλώσεις
+\item Δυνατότητα άμεσης επικοινωνίας και αλληλεπίδρασης με {\latintext{«followers»}}
+\end{itemize}
+\end{frame}
+
+\section{Υλοποίηση}
+
+\subsection{Διατύπωση προβλήματος}
+
+\begin{frame}
+\begin{itemize}
+\item Έχουμε λοιπόν ένα σύνολο δεδομένων από {\latintext{tweets}} χρηστών τα οποία αναφέρονται είτε στον {\latintext{Trump}} είτε στην {\latintext{Clinton}}, αλλά και ένα σύνολο από θετικές και αρνητικές λέξεις.
+\item Δημιουργούμε ένα μηχανισμό πρόβλεψης με τη χρήση συγκεκριμένων αλγόριθμων. Εκπαιδεύουμε το σύνολο δεδομένων και προβλέπουμε ποσοστιαία αν ένα {\latintext{tweet}} κατηγοριοποιείται στον {\latintext{Trump}} ή στην {\latintext{Clinton}} και αντίστοιχα αν κατηγοριοποείται θετικά ή αρνητικά.
+\item Υπολογίζουμε την απόδοση των αλγόριθμων και τις μετρικές αξιολόγησης
+\item Κατηγοριοποιούμε τυχαία {\latintext{tweets}} προκειμένου ν' αξιολογήσουμε το μοντέλο πρόβλεψης. 
+\item Χρησιμοποιούμε τη βιβλιοθήκη {\latintext{sklearn}} της {\latintext{Python}}.
+\vfill
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+Συνεπώς, με αυτό το μοντέλο, θα είμαστε σε θέση να κατηγοριοποιούμε αυτόματα μη-κατηγοριοποιημένα {\latintext{tweets}} σε έναν από τους δύο υποψηφίους και σε μια από τις 2 κατηγορίες πολικότητας.
+\begin{table}[!h]
+\begin{center}
+\includegraphics[width=10cm, height=5cm]{predictive_model.png} \footnote{{\latintext{ Amit Kumar (2015)}}}
+\end{center} 
+
+\end{table}
+\end{frame}
+
+\subsection{Λεπτομερής Περιγραφή της Διαδικασίας}
+
+\begin{frame}
+\begin{flushleft}
+{\color{blue}Εισαγωγή Συνόλου Δεδομένων} 
+\end{flushleft}
+\vfill
+\item Μπορούμε συνολικά να δούμε το σύνολο των {\latintext{tweets}}, αλλά και να αποτυπώσουμε σ έναν πίνακα κάποια βασικά στατιστικά στοιχεία.
+\vfill
+\begin{table}[!h]
+\begin{center}
+\includegraphics[width=10cm, height=5cm]{Load_dataset.png}
+\end{center}
+
+\end{table}
+\end{frame}
+
+\begin{frame}
+\begin{flushleft}
+{\color{blue}Προεπεξεργασία Δεδομένων} 
+\end{flushleft}
+\vfill
+\item Χρησιμοποιούμε τη μέθοδο {\latintext{Bag of Words}} όπου ένα κείμενο θεωρούμε οτι αποτελείται από πληθώρα λέξεων και κάθε λέξη αντιστοιχεί σ' έναν αριθμό.
+\vfill
+\begin{itemize}
+\item Βήμα 1: {\latintext{Tokenization}}
+\end{itemize}
+\item Χωρίζουμε τα {\latintext{tweets}} στις λέξεις απο τις οποίες αποτελείται. Δίνουμε ένα παράδειγμα από 4 {\latintext{tweets}}
+\vfill
+\item {\latintext{the, question, in, this, election, who, can, ...}}
+\item {\latintext{if, we, stand, together, there, 's, nothing, ...}}
+\item {\latintext{this, election, is, too, important, to, sit, ...}}
+\item {\latintext{both, candidates, were, asked, about, how, th...}}
+\vfill
+\end{frame}
+
+\begin{frame}
+\begin{itemize}
+\item Βήμα 2: {\latintext{Stemming - Lemmatization}}
+\end{itemize}
+\item Χωρίζουμε τα {\latintext{tweets}} στα λήμματα απο τα οποία αποτελείται. Δίνουμε ένα παράδειγμα από 4 {\latintext{tweets}}
+\vfill
+\item {\latintext{the, question, in, this, election, who, can, ...}}
+\item {\latintext{if, we, stand, together, there, 's, nothing, ...}}
+\item {\latintext{this, election, is, too, important, to, sit, ...}}
+\item {\latintext{both, \textbf{candidate}, were, \textbf{ask}, about, how, th...}}
+\vfill
+\end{frame}
+
+\begin{frame}
+\begin{itemize}
+\item Βήμα 3: Μετατροπή των δεδομένων σε διανύσματα
+\end{itemize}
+\vfill
+\item Αυτή η διαδικασία απαιτεί 3 βήματα
+\vfill
+\begin{itemize}
+\item Τη μέτρηση της συχνότητας εμφάνισης μιας λέξης μέσα σ ένα κείμενο
+\item Τον υπολογισμό του «βάρους» αυτής της μέτρησης. Τα λήμματα που εμφανίζονται συχνότερα θα έχουν μεγαλύτερο βάρος.
+\item Κανονικοποίηση των διανυσμάτων σε μονάδα μήκους.
+\end{itemize}
+\vfill
+\end{frame}
+
+\begin{frame}
+Ας δούμε το κείμενο ενός {\latintext{tweet}} για παράδειγμα\\
+{\emph{{\latintext{"When you work hard, you should not be living in poverty."}}}}
+\[
+\left. {\begin{array}{l|llll}\\
+{\latintext{Words}} & TF & Number & Length & IDF \\
+\hline
+{\latintext{When}} & 1 & 8755 & 0.217922181616 & 4.46783245647  \\
+{\latintext{you}} & 2 & 8593 & 0.161469587626 & 2.85068150539 \\
+{\latintext{work}} & 1 & 8572 & 0.195824391455 & 6.22809005432 \\
+{\latintext{hard}} & 1 & 7779 & 0.183979385543 & 6.78652231980 \\
+{\latintext{should}} & 1 & 7722 & 0.196876463794 & 8.35609126545 \\
+{\latintext{not}} & 1 & 7720 & 0.162516355764 & 2.13656784456 \\
+{\latintext{be}} & 1 & 7720 & 0.161347896547 & 3.43685423559 \\
+{\latintext{living}} & 1 & 6287 & 0.321250380345 & 9.21397659807 \\
+{\latintext{in}} & 1 & 8448 & 0.154590087421 & 3.34721321890 \\
+{\latintext{poverty}} & 1 & 6321 & 0.285789076655 & 8.89032198990
+\end{array} } \right.
+\]
+
+\end{frame}
+
+\begin{frame}
+\begin{itemize}
+\item Συμπερασματικά από την παραπάνω διαδικασία θέλουμε κάθε λέξη μέσα στο σύνολο που έχουμε δημιουργήσει να έχει ένα αντιπροσωπευτικό βάρος, προκειμένου να κάνουμε την καλύτερη δυνατή κατηγοριοποίηση.
+\item Η στάθμιση {\latintext{TF-IDF}} δίνει αρκετά καλά αποτελέσματα, καθώς το βάρος {\latintext{IDF}} παίρνει μεγάλες τιμές, όταν ένας όρος, υπάρχει σε λίγα κείμενα, ενώ, όταν ο όρος συναντάται σε πολλά από τα κείμενα, τότε το βάρος {\latintext{IDF}} παίρνει μικρές τιμές. \item Με αυτή τη στάθμιση, οι σπάνιοι όροι έχουν υψηλό {\latintext{IDF}}, και όροι με μεγάλη συχνότητα βαρύνονται με χαμηλότερο {\latintext{IDF}}.
+\end{itemize}
+\vfill
+\item Τέλος, έχει δημιουργηθεί ένα αραιό μητρώο με το σύνολο των λέξεων με τα παρακάτω χαρακτηριστικά
+\vfill
+\begin{itemize}
+\item {\latintext{sparse matrix shape: (5722, 9016)}}
+\item {\latintext{number of non-zeros: 91236}}
+\item {\latintext{sparsity: 0.18}}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\begin{flushleft}
+{\color{blue}Διαδικασία εκπαίδευσης δεδομένων και κατηγοριοποίησης} 
+\end{flushleft}
+\vfill
+\begin{itemize}
+\item Χωρίζουμε το σύνολο δεδομένων σε σύνολο εκπαίδευσης και σύνολο ελέγχου
+\[
+\left. {\begin{array}{l|lll}\\
+ &Training & Test & Data \\
+\hline
+{\latintext{Size}} & 5149 & 573 & 5722 \\
+\end{array} } \right.
+\]
+\item Με τη χρήση των αλγόριθμων {\latintext{Multinomial Naive Bayes}} και {\latintext{SVM}} αξιολογούμε το σύνολο εκπαίδευσης και το σύνολο ελέγχου τόσο για την κατηγοριοποίηση υποψηφίου όσο και για την κατηγοριοποίηση συναισθήματος.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\begin{flushleft}
+{\color{blue}Κατηγοριοποίηση υποψηφίου με {\latintext{Multinomial Naive Bayes}}} 
+\end{flushleft}
+\vfill
+{\latintext{Accuracy on Training Set: 96.98$\%$}}
+\[
+\left. {\begin{array}{l|llll}\\
+ &Precision & Recall & f1-score & support \\
+\hline
+{\latintext{Hillary}} & 0.96 & 0.97 & 0.97 & 2629  \\
+{\latintext{Trump}} & 0.97 & 0.97 & 0.97 & 3093 \\
+{\latintext{avg/total}} & 0.97 & 0.97 & 0.97 & 5722
+\end{array} } \right.
+\]
+{\latintext{Accuracy on Test Set: 92.96$\%$}}
+\[
+\left. {\begin{array}{l|llll}
+ &Precision & Recall & f1-score & support \\
+\hline
+{\latintext{Hillary}} & 0.92 & 0.94 & 0.93 & 274  \\
+{\latintext{Trump}} & 0.97 & 0.97 & 0.97 & 299 \\
+{\latintext{avg/total}} & 0.94 & 0.93 & 0.94 & 573
+\end{array} } \right.
+\]
+\end{frame}
+
+\begin{frame}
+\begin{flushleft}
+{\color{blue}Κατηγοριοποίηση συναισθήματος με {\latintext{Multinomial Naive Bayes}}} 
+\end{flushleft}
+\vfill
+{\latintext{Accuracy on Training Set: 88.94$\%$}}
+\[
+\left. {\begin{array}{l|llll}
+ &Precision & Recall & f1-score & support \\
+\hline
+{\latintext{Negative}} & 0.88 & 0.89 & 0.88 & 2729  \\
+{\latintext{Positive}} & 0.90 & 0.89 & 0.89 & 2993 \\
+{\latintext{avg/total}} & 0.89 & 0.89 & 0.89 & 5722
+\end{array} } \right.
+\]
+{\latintext{Accuracy on Test Set: 77.32$\%$}}
+\vfill
+\[
+\left. {\begin{array}{l|llll}
+ &Precision & Recall & f1-score & support \\
+\hline
+{\latintext{Negative}} & 0.76 & 0.78 & 0.77 & 265  \\
+{\latintext{Positive}} & 0.90 & 0.89 & 0.89 & 308 \\
+{\latintext{avg/total}} & 0.89 & 0.89 & 0.89 & 573
+\end{array} } \right.
+\]
+\end{frame}
+
+\begin{frame}
+\begin{flushleft}
+{\color{blue}Κατηγοριοποίηση υποψηφίου με {\latintext{SVM}}} 
+\end{flushleft}
+\vfill
+{\latintext{Accuracy on Training Set: 99.72$\%$}}
+\vfill
+\[
+\left. {\begin{array}{l|llll}
+ &Precision & Recall & f1-score & support \\
+\hline
+{\latintext{Hillary}} & 1.00 & 1.00 & 1.00 & 2629  \\
+{\latintext{Trump}} & 1.00 & 1.00 & 1.00 & 3093 \\
+{\latintext{avg/total}} & 1.00 & 1.00 & 1.00 & 5722
+\end{array} } \right.
+\]
+{\latintext{Accuracy on Test Set: 93.47$\%$}}
+\vfill
+\[
+\left. {\begin{array}{l|llll}
+ &Precision & Recall & f1-score & support \\
+\hline
+{\latintext{Hillary}} & 0.93 & 0.94 & 0.94 & 243  \\
+{\latintext{Trump}} & 0.95 & 0.94 & 0.95 & 330 \\
+{\latintext{avg/total}} & 0.94 & 0.94 & 0.94 & 573
+\end{array} } \right.
+\]
+\end{frame}
+
+\begin{frame}
+\begin{flushleft}
+{\color{blue}Κατηγοριοποίηση συναισθήματος με {\latintext{SVM}}} 
+\end{flushleft}
+\vfill
+{\latintext{Accuracy on Training Set: 98.95$\%$}}
+\vfill
+\[
+\left. {\begin{array}{l|llll}
+ &Precision & Recall & f1-score & support \\
+\hline
+{\latintext{Negative}} & 0.99 & 0.99 & 0.99 & 2729  \\
+{\latintext{Positive}} & 0.99 & 0.99 & 0.99 & 2993 \\
+{\latintext{avg/total}} & 0.99 & 0.99 & 0.99 & 5722
+\end{array} } \right.
+\]
+{\latintext{Accuracy on Test Set: 80.27$\%$}}
+\vfill
+\[
+\left. {\begin{array}{l|llll}
+ &Precision & Recall & f1-score & support \\
+\hline
+{\latintext{Negative}} & 0.81 & 0.77 & 0.79 & 265  \\
+{\latintext{Positive}} & 0.80 & 0.84 & 0.82 & 308 \\
+{\latintext{avg/total}} & 0.81 & 0.81 & 0.81 & 573
+\end{array} } \right.
+\]
+\end{frame}
+
+\subsection{Παραδείγματα εφαρμογής του μοντέλου πρόβλεψης}
+\begin{frame}
+\begin{flushleft}
+{\color{blue}Αξιολόγηση μηχανισμού πρόβλεψης με τον αλγόριθμο {\latintext{Multinomial Naive Bayes}}} 
+\end{flushleft}
+\vfill
+Θα κατηγοριοποιήσουμε τυχαία {\latintext{tweets}} 
+\begin{itemize}
+\item {\latintext{Tweet #1: ' With this election we're simultaneously breaking through the glass ceiling and the rock bottom. We got a really big room now '}}
+\vfill
+{\emph{{\latintext{I'm about 76$\%$ sure this was tweeted by Hillary and the polarity is about 59$\%$ Positive}}}}
+\item {\latintext{Tweet #2: ' Sorry losers and haters, but my I.Q. is one of the highest -and you all know it! Please don't feel so stupid or insecure,it's not your fault '}}
+\vfill
+{\emph{{\latintext{I'm about 60$\%$ sure this was tweeted by Trump and the polarity is about 67$\%$ Negative}}}}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\begin{flushleft}
+{\color{blue}Αξιολόγηση μηχανισμού πρόβλεψης με τον αλγόριθμο {\latintext{SVM}}} 
+\end{flushleft}
+\vfill
+Θα κατηγοριοποιήσουμε τυχαία {\latintext{tweets}} 
+\begin{itemize}
+\item {\latintext{Tweet #1: ' With this election we're simultaneously breaking through the glass ceiling and the rock bottom. We got a really big room now '}}
+\vfill
+{\emph{{\latintext{I'm about 92$\%$ sure this was tweeted by Hillary and the polarity is about 92$\%$ Positive}}}}
+\item {\latintext{Tweet #2: ' Sorry losers and haters, but my I.Q. is one of the highest -and you all know it! Please don't feel so stupid or insecure,it's not your fault '}}
+\vfill
+{\emph{{\latintext{I'm about 75$\%$ sure this was tweeted by Trump and the polarity is about 95$\%$ Negative}}}}
+\end{itemize}
+\end{frame}
+
+\subsection{Σύγκριση Αλγόριθμων}
+\begin{frame}
+\begin{flushleft}
+{\color{blue}{\latintext{SVM Vs Multinomial Naive Bayes}}} 
+\end{flushleft}
+\vfill
+\begin{itemize}
+\item Παρατηρούμε πως μέσα από την εκπαίδευση των δεδομένων, αλλά και με την αξιολόγηση του μηχανισμού πρόβλεψης κατηγοριοποιώντας τυχαία {\latintext{tweets}}, με το {\latintext{LinearSVC}} παίρνουμε καλύτερα αποτελέσματα απ’ ότι με τον {\latintext{Multinomial Naive Bayes}}.
+\vfill
+\item Ο {\latintext{Multinomial Naive Bayes}} είναι αρκετά πιο γρήγορος από τον {\latintext{SVM}}, για το λόγω του ότι διαρκεί αρκετή ώρα η εκπαίδευση των συντελεστών για τη γραμμική κατηγοριοποίηση με {\latintext{SVM}}.  
+\end{itemize}
+\end{frame}
+
+\section{Ανάλυση Δεδομένων και μοντέλο πρόβλεψης με το {\latintext{Orange}}}
+
+
+\begin{frame}
+\begin{flushleft}
+{\color{blue}Εισαγωγή στο {\latintext{Orange}}} \footnote{{\latintext{ Marinka Žitnik; Blaž Zupan (2013)}}}
+\end{flushleft}
+\vfill
+\begin{itemize}
+\item Το {\latintext{Orange}} είναι μια ανοικτού κώδικα οπτικοποίηση δεδομένων, μηχανικής μάθησης και εργαλείο εξόρυξης δεδομένων.
+\item Αποτελείται από μικροεφαρμογές{\latintext{(widgets)}}, τα οποία μπορεί να είναι από την απεικόνιση απλών συνόλων δεδομένων, υποσύνολα επιλογής και προεπεξεργασίας μέχρι εμπειρική αξιολόγηση αλγόριθμων μάθησης και προγνωστική μοντελοποίηση.
+\item Αποτελείται επίσης από μια επιφάνεια γραφικών, πάνω στην οποία ο χρήστης τοποθετεί τα {\latintext{widgets}} και δημιουργεί μια ροή ανάλυσης δεδομένων {\latintext{(data analysis workflow)}}. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\begin{flushleft}
+{\color{blue}Παράδειγμα Υλοποίησης} 
+\end{flushleft}
+\vfill
+\begin{itemize}
+\item {\textbf{Σύνολο Δεδομένων}}: Είναι συλλογή χιλιάδων {\latintext{tweets}} μετά το πρώτο {\latintext{debate}} μεταξύ των υποψηφίων του ρεπουμπλικανικού κόμματος πριν τις Αμερικανικές εκλογές. Τα {\latintext{tweets}} έχουν αναφορά σε κάποιον υποψήφιο, ενώ υπάρχει και η άποψη για τον συγκεκριμένο υποψήφιο (θετική, αρνητική, ουδέτερη).
+\item {\textbf{Ροή εργασίας {\latintext{(Workflow Process)}}}}:
+\begin{table}[!h]
+\begin{center}
+\includegraphics[width=8cm, height=4cm]{workflow_process.png}
+\end{center}
+\end{table}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\begin{flushleft}
+{\color{blue}Ανάλυση Δεδομένων με τη χρήση του {\latintext{Box Plot}}} 
+\end{flushleft}
+\vfill
+\item Αποτυπώνουμε με τη βοήθεια του {\latintext{Box Plot}} τη σχέση μεταξύ του χαρακτηριστικού {\latintext{‘sentiment’}} και του χαρακτηριστικού {\latintext{‘candidate’}}, προκειμένου να δούμε γραφικά την κατανομή σε σχέση με το συναίσθημα(θετικό, αρνητικό, ουδέτερο) των {\latintext{tweets}}  για κάθε υποψήφιο.
+\vfill
+\begin{table}[!h]
+\begin{center}
+\includegraphics[width=10cm, height=5cm]{Box_plot.png}
+\end{center}
+\end{table}
+\end{frame}
+
+\begin{frame}
+\begin{flushleft}
+{\color{blue}Εκπαίδευση δεδομένων και απόδοση αλγόριθμων} 
+\end{flushleft}
+\vfill
+Με τη χρήση αλγόριθμων μάθησης {\latintext{(Naïve Bayes, SVM, Random Forest)}} εκπαιδεύουμε τα δεδομένα μας και φτιάχνουμε ένα μοντέλο πρόβλεψης.
+\begin{table}[!h]
+\begin{center}
+\includegraphics[width=10cm, height=5cm]{acc_algorithms.png}
+\end{center}
+\end{table}
+\end{frame}
+
+\section{Συμπεράσματα - Μελλοντική Επέκταση}
+\begin{frame}
+\begin{flushleft}
+{\color{blue}Συμπεράσματα} 
+\end{flushleft}
+\vfill
+\begin{itemize}
+\item Οι δύο αλγόριθμοι παρουσιάζουν υψηλά ποσοστά ακρίβειας τόσο για την πρόβλεψη του υποψηφίου όσο και για την πρόβλεψη του συναισθήματος(πάνω από 95$\%$). Το γεγονός αυτό οφείλεται στο ότι έγινε σωστή προεπεξεργασία των δεδομένων, που αποτελεί και το σημαντικότερο παράγοντα για τη σωστή ταξινόμηση.
+\item H εισαγωγή συνόλου λέξεων με θετική και αρνητική πολικότητα, μας βοήθησε πολύ και μας έδωσε πολύ καλά αποτελέσματα σχετικά με τη διαμόρφωση γνώμης για τα {\latintext{tweets}}.
+\item Χρησιμοποιήσαμε κάποια τυχαία {\latintext{tweets}} τα οποία ήταν αρκετά δημοφιλή κατά την προεκλογική περίοδο. Τα αποτελέσματα που πήραμε μέσα από το μηχανισμό πρόβλεψης, σχετικά με την πολικότητα του {\latintext{tweet}} είναι αρκετά ενθαρρυντικά σχετικά με την ακρίβεια και την αξιοπιστία.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\begin{flushleft}
+{\color{blue}Μελλοντική επέκταση} 
+\end{flushleft}
+\vfill
+\begin{itemize}
+\item Τη βελτιστοποίηση του υπάρχοντος μοντέλου, προκειμένου να μπορούμε να επιτυγχάνουμε μεγαλύτερη ακρίβεια. Αυτό μπορεί να γίνει τόσο με την αξιοποίηση περισσότερων χαρακτηριστικών γνωρισμάτων που μπορούν να εξαχθούν από {\latintext{tweets}}, όσο και από τη βελτιστοποίηση των παραμέτρων των αλγόριθμων.
+\vfill
+\item Την επεκτασιμότητα του υπάρχοντος μοντέλου, προκειμένου να μπορούμε να πάρουμε περισσότερα στοιχεία για το χρήστη(φύλο, ηλικία, μορφωτικό επίπεδο) και να αξιολογήσουμε το προφίλ του.
+\vfill
+\end{itemize}
+\end{frame}
+
+\section{Βιβλιογραφία}
+\begin{frame}
+\begin{enumerate}
+\item {\latintext{Raghavan, V. V. and Wong, S. K. M. A critical analysis of vector space model for information retrieval. Journal of the American Society for Information Science, Vol.37 (5), p. 279-87, 1986}}
+\item {\latintext{Rashmi Agrawal, Mridula Batra, "A Detailed Study on Text Mining Techniques", IJSCE, ISSN: 2231-2307, Vol. 2, Issue-6, January 2013.}}
+\item {\latintext{Mitchell, T. (1997). Machine Learning, McGraw Hill, Machine Learning, McGraw Hill, p.2}}
+\item {\latintext{S. ChandraKala and C. Sindhu, (2012), Opinion Mining And Sentiment Classification: A Survey, ICTACT Journal on Soft Computing, Vol- 03, ISSUE: 01, ISSN: 2229-6956}}
+\item {\latintext{Enli, G. S. & Skogerbo, E. (2013). Personalized Campaigns In Party-Centred Politics.}}
+\item {\latintext{Introduction-to-machine-learning (May 2015), Amit Kumar.}}
+\item {\latintext{ Marinka Žitnik; Blaž Zupan (2013). "Orange: data mining toolbox in Python" (PDF). JMLR. 14 (1): 2349–2353.}}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\begin{center}
+{\color{blue}
+\emph{Ευχαριστώ για την προσοχή σας}
+}%
+\end{center}
+\end{frame}
+
+\end{document}
+
